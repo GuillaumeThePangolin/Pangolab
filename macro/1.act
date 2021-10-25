@@ -1,0 +1,6 @@
+[	'	C	l	e	a	r	D	a	t	a	'	,	 	N	o	n	e	]
+[	'	M	a	t	h	'	,	 	[	'	v	a	r	i	a	b	l	e	s	.	A	 	=	 	0	'	]	]
+[	'	C	u	s	t	o	m	S	w	e	e	p	'	,	 	[	[	'	5	_	C	r	y	o	M	a	g	4	G	'	,	 	'	5	_	C	R	Y	O	4	G	_	C	u	r	r	e	n	t	'	]	,	 	[	'	6	_	L	S	3	5	0	'	,	 	'	6	_	L	S	3	5	0	_	A	'	]	,	 	[	'	1	_	B	i	l	t	'	,	 	'	1	_	B	i	l	t	_	2	2	3	1	_	i	4	_	v	o	l	t	a	g	e	'	]	]	,	 	[	[	'	5	_	C	r	y	o	M	a	g	4	G	'	,	 	'	5	_	C	R	Y	O	4	G	_	C	u	r	r	e	n	t	'	,	 	F	a	l	s	e	,	 	'	v	a	r	i	a	b	l	e	s	.	A	'	,	 	'	v	a	r	i	a	b	l	e	s	.	A	'	,	 	'	0	.	1	'	,	 	'	1	0	0	'	,	 	'	1	'	,	 	T	r	u	e	,	 	'	0	.	0	5	'	,	 	'	1	0	0	0	'	,	 	'	1	0	'	]	]	]
+[	'	C	u	s	t	o	m	S	w	e	e	p	'	,	 	[	[	'	5	_	C	r	y	o	M	a	g	4	G	'	,	 	'	5	_	C	R	Y	O	4	G	_	C	u	r	r	e	n	t	'	]	,	 	[	'	6	_	L	S	3	5	0	'	,	 	'	6	_	L	S	3	5	0	_	A	'	]	,	 	[	'	1	_	B	i	l	t	'	,	 	'	1	_	B	i	l	t	_	2	2	3	1	_	i	4	_	v	o	l	t	a	g	e	'	]	]	,	 	[	[	'	1	_	B	i	l	t	'	,	 	'	1	_	B	i	l	t	_	2	2	3	1	_	i	4	_	v	o	l	t	a	g	e	'	,	 	T	r	u	e	,	 	'	0	'	,	 	'	3	'	,	 	'	0	.	1	'	,	 	'	1	0	0	'	,	 	'	1	'	,	 	F	a	l	s	e	,	 	'	'	,	 	'	'	,	 	'	'	]	,	 	[	'	1	_	B	i	l	t	'	,	 	'	1	_	B	i	l	t	_	2	2	3	1	_	i	4	_	v	o	l	t	a	g	e	'	,	 	F	a	l	s	e	,	 	'	3	'	,	 	'	0	'	,	 	'	1	'	,	 	'	1	0	0	'	,	 	'	1	'	,	 	F	a	l	s	e	,	 	'	'	,	 	'	'	,	 	'	'	]	]	]
+[	'	M	a	t	h	'	,	 	[	'	v	a	r	i	a	b	l	e	s	.	A	 	+	=	 	0	.	5	'	]	]
+[	'	J	u	m	p	I	f	'	,	 	[	'	v	a	r	i	a	b	l	e	s	.	A	 	<	=	 	2	'	,	 	2	]	]
