@@ -552,7 +552,7 @@ class Action(QtCore.QObject):
                 port = 465
                 sender = "pangolabtopo2d@gmail.com"
                 reciever = param[2]
-                password = "PangoTopo2020"
+                password = "password"
                 context = ssl.create_default_context()
                 if param [4] : 
                     body = "The file " + self.VariablesToStr(param[1]) +" has been saved, see attached."
