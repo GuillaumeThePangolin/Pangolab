@@ -16,7 +16,9 @@ class Sr830(object):
         self.time_dict = {"10 μs":'0',"30 μs":'1',"100 μs":'2',"300 μs":'3',"1 ms":'4',"3 ms":'5',"10 ms":'6',"30 ms":'7',"100 ms":'8',"300 ms":'9',"1 s":'10',"3 s":'11',"10 s":'12',"30 s":'13',"100 s":'14',"300 s":'15',"1 ks":'16',"3 ks":'17',"10 ks":'18',"30 ks":'19'}
         self.time_dict_inverted = {'0':10e-6,'1':30e-6,'2':100e-6,'3':300e-6,'4':1e-3,'5':3e-3,'6':10e-3,'7':30e-3,'8':100e-3,'9':300e-3,'10':1,'11':3,'12':10,'13':30,'14':100,'15':300,'16':1e3,'17':3e3,'18':1e4,'19':3e4}
         self.inst = inst
+        self.isenss = None
         self.autogain = True
+        self.uponly = False
         # self.inst.query_delay = 2
         self.inst.clear()
         self.inst.timeout = None #timeout infinite bc of overload
@@ -43,7 +45,7 @@ class Sr830(object):
     
     def write_pattern(self,devicenumber,write_key):
         if write_key == self.write_keys[0]:
-            return([('Reference','choice',['None','Internal','External']),('Sensitivity','choice',['None','Auto'] + list(self.sens_dict)),('Time Constant','choice',['None'] + list(self.time_dict)),('Amplitude(V)','text',None),('Phase(°) (type auto for autophase)','text',None),('Frequency(Hz)','text',None),('Autogain','choice',['None','on','off'])])
+            return([('Reference','choice',['None','Internal','External']),('Sensitivity','choice',['None','Auto'] + list(self.sens_dict)),('Time Constant','choice',['None'] + list(self.time_dict)),('Amplitude(V)','text',None),('Phase(°) (type auto for autophase)','text',None),('Frequency(Hz)','text',None),('Autogain','choice',['None','on','off', 'up only'])])
 
     
     
@@ -81,31 +83,46 @@ class Sr830(object):
     #         self.inst.write('*CLS')#reset status buffer
     
     def OverloadHandling(self):
-        X,Y,R = self.inst.query('SNAP? 1,2,3').split(',')
+        X,Y,R = self.inst.query('SNAP? 1,2,3').split(',') #querying X,Y and R
         X,Y,R = float(X),float(Y),float(R)
         if self.autogain:
-            isens = int(self.inst.query('SENS?').replace('\n',''))
-            i = self.inst.query('OFLT?').replace('\n','')
+            isens = int(self.inst.query('SENS?').replace('\n','')) #querying sensistivity
+            i = self.inst.query('OFLT?').replace('\n','') #querying time constant
             T = self.time_dict_inverted[i]
             variables.sharedbuffer[self.devicenumber-1] = self.sens_dict_inverted[isens]
             while isens <26 and R > 0.95*self.sens_dict_inverted[isens]*self.multiplier:
                 isens += 1
                 self.inst.write('SENS ' + str(isens))
+                self.isenss = isens #saving the sensitivity in the variable self.isenss 
                 sleep(10*T)#seconds
-                self.inst.write('REST')
-                self.inst.write('*CLS')
+                self.inst.write('REST') #Reset the scan. All stored data is lost
+                self.inst.write('*CLS') #Clear all status bytes
                 X,Y,R = self.inst.query('SNAP? 1,2,3').split(',')
                 X,Y,R = float(X),float(Y),float(R)
                 variables.sharedbuffer[self.devicenumber-1] = self.sens_dict_inverted[isens]*self.multiplier
             while isens>0 and R < 0.7*self.sens_dict_inverted[isens-1]*self.multiplier:
                 isens-=1
                 self.inst.write('SENS ' + str(isens))
+                self.isenss = isens
                 sleep(10*T)#seconds
                 self.inst.write('REST')
                 self.inst.write('*CLS')
                 X,Y,R = self.inst.query('SNAP? 1,2,3').split(',')
                 X,Y,R = float(X),float(Y),float(R)
                 variables.sharedbuffer[self.devicenumber-1] = self.sens_dict_inverted[isens]*self.multiplier
+                
+        if self.uponly:
+            if self.isenss == None:
+                isens = int(self.inst.query('SENS?').replace('\n',''))
+            else: 
+                isens = self.isenss
+                
+            variables.sharedbuffer[self.devicenumber-1] = self.sens_dict_inverted[isens]
+            while  R > 0.90*self.sens_dict_inverted[isens]*self.multiplier:
+                isens += 1
+                self.inst.write('SENS ' + str(isens))
+                self.isenss = isens
+            
         return(X,Y)
     
     def Read(self,Key):
@@ -136,6 +153,7 @@ class Sr830(object):
                     self.inst.write('*CLS')#reset status buffer
                 else:
                     self.inst.write('SENS ' + self.sens_dict[L[1]])
+                    self.isenss = self.sens_dict[L[1]]
             if L[2] != 'None':
                 self.inst.write('OFLT' + self.time_dict[L[2]])
             
@@ -156,9 +174,13 @@ class Sr830(object):
                         self.inst.write('SLVL ' + V)
             if L[6] == 'on':
                 self.autogain = True
+                self.uponly = False
             elif L[6] == 'off':
                 self.autogain = False
-            
+                self.uponly = False
+            elif L[6] == 'up only':
+                self.uponly = True
+                self.autogain = False
             
             return(True)
             
